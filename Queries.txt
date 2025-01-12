@@ -1,0 +1,175 @@
+Préfixes a utiliser pour chaques requêtes :
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX : <http://example.org/ontology#>
+
+1. Photos représentant Manuel Atencia
+
+SELECT ?photo ?title
+WHERE {
+  ?photo a :Photo ;
+         :hasTitle ?title ;
+         :hasPerson :ManuelAtencia .
+}
+
+Résultat :
+http://example.org/ontology#Photo5    "La Foire de Grenoble - Décoration de Noël"^^http://www.w3.org/2001/XMLSchema#string
+http://example.org/ontology#Photo10    "Promenade nocturne à Lyon"^^http://www.w3.org/2001/XMLSchema#string
+http://example.org/ontology#Photo3    "JO Paris 2024 - Cérémonie d'ouverture"^^http://www.w3.org/2001/XMLSchema#string
+http://example.org/ontology#Photo8    "Selfie devant la Tour Eiffel"^^http://www.w3.org/2001/XMLSchema#string
+http://example.org/ontology#Photo1    "Tour Eiffel au crépuscule"^^http://www.w3.org/2001/XMLSchema#string
+
+2. Images représentant Manuel Atencia et Philippe Genoud ensemble
+
+SELECT ?photo ?title
+WHERE {
+  ?photo a :Photo ;
+         :hasTitle ?title ;
+         :hasPerson :ManuelAtencia, :PhilippeGenoud .
+}
+
+Résultat :
+http://example.org/ontology#Photo5    "La Foire de Grenoble - Décoration de Noël"^^http://www.w3.org/2001/XMLSchema#string
+http://example.org/ontology#Photo8    "Selfie devant la Tour Eiffel"^^http://www.w3.org/2001/XMLSchema#string
+
+3. Photos comportant au moins une personne
+
+SELECT DISTINCT ?photo ?title
+WHERE {
+  ?photo a :Photo ;
+         :hasTitle ?title ;
+         :hasPerson ?person .
+}
+
+Résultat :
+http://example.org/ontology#Photo7    "Festival de Cannes - Tapis rouge"^^http://www.w3.org/2001/XMLSchema#string
+http://example.org/ontology#Photo2    "Les Fêtes des Lumières 2023"^^http://www.w3.org/2001/XMLSchema#string
+http://example.org/ontology#Photo4    "Vue de la Tour Perret à Grenoble"^^http://www.w3.org/2001/XMLSchema#string
+http://example.org/ontology#Photo6    "Balade à Lyon"^^http://www.w3.org/2001/XMLSchema#string
+http://example.org/ontology#Photo8    "Selfie devant la Tour Eiffel"^^http://www.w3.org/2001/XMLSchema#string
+http://example.org/ontology#Photo9    "Nuit étoilée à Grenoble"^^http://www.w3.org/2001/XMLSchema#string
+http://example.org/ontology#Photo3    "JO Paris 2024 - Cérémonie d'ouverture"^^http://www.w3.org/2001/XMLSchema#string
+http://example.org/ontology#Photo1    "Tour Eiffel au crépuscule"^^http://www.w3.org/2001/XMLSchema#string
+http://example.org/ontology#Photo5    "La Foire de Grenoble - Décoration de Noël"^^http://www.w3.org/2001/XMLSchema#string
+http://example.org/ontology#Photo10    "Promenade nocturne à Lyon"^^http://www.w3.org/2001/XMLSchema#string
+
+
+4. Photos sans personnes
+
+SELECT ?photo ?title
+WHERE {
+  ?photo a :Photo ;
+         :hasTitle ?title .
+  FILTER NOT EXISTS {
+    ?photo :hasPerson ?person .
+  }
+}
+
+Résultat :
+http://example.org/ontology#Photo11    "Photo de l'événement sans personnes"^^http://www.w3.org/2001/XMLSchema#string
+
+5. Photos des amis de Manuel Atencia
+
+SELECT ?photo ?title
+WHERE {
+  :ManuelAtencia :isFriendOf ?friend .
+  ?photo a :Photo ;
+         :hasTitle ?title ;
+         :hasPerson ?friend .
+}
+
+Résultat :
+http://example.org/ontology#Photo7    "Festival de Cannes - Tapis rouge"^^http://www.w3.org/2001/XMLSchema#string
+http://example.org/ontology#Photo2    "Les Fêtes des Lumières 2023"^^http://www.w3.org/2001/XMLSchema#string
+http://example.org/ontology#Photo5    "La Foire de Grenoble - Décoration de Noël"^^http://www.w3.org/2001/XMLSchema#string
+http://example.org/ontology#Photo8    "Selfie devant la Tour Eiffel"^^http://www.w3.org/2001/XMLSchema#string
+http://example.org/ontology#Photo9    "Nuit étoilée à Grenoble"^^http://www.w3.org/2001/XMLSchema#string
+
+6. Photos de pendaison de crémaillère
+
+SELECT ?photo ?title
+WHERE {
+  ?photo a :Photo ;
+         :hasTitle ?title ;
+         :hasEvent ?event .
+  ?event :hasEventType :PendaisonCremaille .
+}
+
+Résultat : 
+http://example.org/ontology#Photo11    "Photo de l'événement sans personnes"^^http://www.w3.org/2001/XMLSchema#string
+
+7. Photos de pendaison de crémaillère avec Manuel Atencia
+
+SELECT ?photo ?title
+WHERE {
+  ?photo a :Photo ;
+         :hasTitle ?title ;
+         :hasPerson :ManuelAtencia ;
+         :hasEvent ?event .
+  ?event :hasEventType :PendaisonCremaille .
+}
+
+Résultat :
+vide
+
+
+8. Photos prises pendant une période donnée
+
+Pour les dates entre le 1er juin 2023 et le 30 septembre 2023 :
+
+SELECT ?photo ?title
+WHERE {
+  ?photo a :Photo ;
+         :hasTitle ?title ;
+         :hasDate ?date .
+  FILTER (?date >= "2023-06-01"^^xsd:date && ?date <= "2023-09-30"^^xsd:date) .
+}
+
+Résultat : 
+http://example.org/ontology#Photo4    "Vue de la Tour Perret à Grenoble"^^http://www.w3.org/2001/XMLSchema#string
+http://example.org/ontology#Photo8    "Selfie devant la Tour Eiffel"^^http://www.w3.org/2001/XMLSchema#string
+http://example.org/ontology#Photo9    "Nuit étoilée à Grenoble"^^http://www.w3.org/2001/XMLSchema#string
+http://example.org/ontology#Photo1    "Tour Eiffel au crépuscule"^^http://www.w3.org/2001/XMLSchema#string
+
+
+9. Photos prises en Isère
+
+SELECT ?photo ?title
+WHERE {
+  ?photo a :Photo ;
+         :hasTitle ?title ;
+         :hasPlace ?place .
+  ?place :locatedInRegion+ :Isere .
+}
+
+Résultat : 
+http://example.org/ontology#Photo5    "La Foire de Grenoble - Décoration de Noël"^^http://www.w3.org/2001/XMLSchema#string
+http://example.org/ontology#Photo9    "Nuit étoilée à Grenoble"^^http://www.w3.org/2001/XMLSchema#string
+http://example.org/ontology#Photo4    "Vue de la Tour Perret à Grenoble"^^http://www.w3.org/2001/XMLSchema#string
+
+10. Photos d’un objet particulier (Tour Eiffel)
+
+SELECT ?photo ?title
+WHERE {
+  ?photo a :Photo ;
+         :hasTitle ?title ;
+         :hasObject :TourEiffel .
+}
+
+Résultat :
+http://example.org/ontology#Photo8    "Selfie devant la Tour Eiffel"^^http://www.w3.org/2001/XMLSchema#string
+http://example.org/ontology#Photo1    "Tour Eiffel au crépuscule"^^http://www.w3.org/2001/XMLSchema#string
+
+11. Les selfies d’un utilisateur
+
+SELECT ?photo ?title ?person
+WHERE {
+  ?photo a :Selfie ;
+         :hasTitle ?title ;
+         :hasPerson ?person .
+}
+
+Résultat :
+http://example.org/ontology#Photo4    "Vue de la Tour Perret à Grenoble"^^http://www.w3.org/2001/XMLSchema#string    http://example.org/ontology#DanielleZieblin

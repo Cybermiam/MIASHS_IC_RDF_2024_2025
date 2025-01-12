@@ -1,0 +1,145 @@
+
+@prefix : <http://example.org/ontology#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix dbpedia: <http://dbpedia.org/resource/> .
+
+# Ontologie définie comme OWL
+:Album a owl:Class ;
+    rdfs:label "Album photo" ;
+    rdfs:comment "Une collection de photos appartenant à un utilisateur." .
+
+:Photo a owl:Class ;
+    rdfs:label "Photo" ;
+    rdfs:comment "Représente une photo annotée dans l'album." .
+
+:Event a owl:Class ;
+    rdfs:label "Événement" ;
+    rdfs:comment "Un événement lié à une ou plusieurs photos." .
+
+:Person a foaf:Person ;
+    rdfs:label "Personne" ;
+    rdfs:comment "Une personne apparaissant sur une photo." .
+
+:Object a owl:Class ;
+    rdfs:label "Objet" ;
+    rdfs:comment "Un objet identifiable dans une photo." .
+
+:Place a owl:Class ;
+    rdfs:label "Lieu" ;
+    rdfs:comment "Un lieu géographique." .
+
+:Selfie a owl:Class ;
+    rdfs:subClassOf :Photo .
+
+:Region a owl:Class .
+
+:EventType a owl:Class .
+# Propriétés
+:hasTitle a owl:DatatypeProperty ;
+    rdfs:domain :Photo ;
+    rdfs:range xsd:string ;
+    rdfs:label "Titre de la photo" .
+
+:hasDate a owl:DatatypeProperty ;
+    rdfs:domain :Photo ;
+    rdfs:range xsd:date ;
+    rdfs:label "Date de prise de la photo" .
+
+:hasPlace a owl:ObjectProperty ;
+    rdfs:domain :Photo ;
+    rdfs:range :Place ;
+    rdfs:label "Lieu de la photo" .
+
+:hasPerson a owl:ObjectProperty ;
+    rdfs:domain :Photo ;
+    rdfs:range :Person ;
+    rdfs:label "Personne sur la photo" ;
+    owl:inverseOf :isInPhoto .
+
+:isInPhoto a owl:ObjectProperty ;
+    rdfs:domain :Person ;
+    rdfs:range :Photo ;
+    rdfs:label "Apparaît dans la photo" ;
+    owl:inverseOf :hasPerson .
+
+:hasEvent a owl:ObjectProperty ;
+    rdfs:domain :Photo ;
+    rdfs:range :Event ;
+    rdfs:label "Événement associé à la photo" .
+
+:isFriendOf a owl:ObjectProperty ;
+    rdfs:domain :Person ;
+    rdfs:range :Person ;
+    owl:SymmetricProperty true .
+
+:locatedInRegion a owl:ObjectProperty ;
+    rdfs:domain :Place ;
+    rdfs:range :Region .
+
+:hasEventType a owl:ObjectProperty ;
+    rdfs:domain :Event ;
+    rdfs:range :EventType .
+
+:hasObject a owl:ObjectProperty ;
+    rdfs:domain :Photo ;
+    rdfs:range :Object .
+
+:hasDate a owl:DatatypeProperty ;
+    rdfs:domain :Photo ;
+    rdfs:range xsd:date .
+
+# Régions pour les lieux
+:Isere a :Region ;
+    foaf:name "Isère" .
+
+:France a :Region ;
+    foaf:name "France" .
+
+:Grenoble :locatedInRegion :Isere .
+:Paris :locatedInRegion :France .
+:Lyon :locatedInRegion :France .
+:Cannes :locatedInRegion :France .
+
+:PendaisonCremaille a :EventType ;
+    foaf:name "Pendaison de crémaillère" .
+
+:Anniversaire a :EventType ;
+    foaf:name "Anniversaire" .
+
+:Sport a :EventType ;
+    foaf:name "Événement sportif" .
+
+:Culture a :EventType ;
+    foaf:name "Événement culturel" .
+
+:FetesLumieres :hasEventType :Culture .
+:JOParis2024 :hasEventType :Sport .
+:FoireGrenoble :hasEventType :Culture .
+:FestivalCannes :hasEventType :Culture .
+
+# Axiomes OWL
+:Photo a owl:Class ;
+    owl:equivalentClass [ 
+        a owl:Restriction ;
+        owl:onProperty :hasTitle ;
+        owl:someValuesFrom xsd:string 
+    ] ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty :hasDate ;
+        owl:someValuesFrom xsd:date 
+    ] .
+
+# Relations avec des données externes
+:Paris a :Place ;
+    foaf:page <http://dbpedia.org/resource/Paris> ;
+    foaf:name "Paris" .
+
+:TourEiffel a :Object ;
+    foaf:page <http://dbpedia.org/resource/Eiffel_Tower> ;
+    foaf:name "Tour Eiffel" .

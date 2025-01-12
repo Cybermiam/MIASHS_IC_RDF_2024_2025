@@ -1,0 +1,162 @@
+@prefix : <http://example.org/ontology#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# Lieux
+:Paris a :Place ;
+    foaf:name "Paris" .
+
+:Grenoble a :Place ;
+    foaf:name "Grenoble" .
+
+:Lyon a :Place ;
+    foaf:name "Lyon" .
+
+:Cannes a :Place ;
+    foaf:name "Cannes" .
+
+# Régions
+:Isere a :Region ;
+    foaf:name "Isère" .
+
+:France a :Region ;
+    foaf:name "France" .
+
+# Objets
+:TourEiffel a :Object ;
+    foaf:name "Tour Eiffel" ;
+    :locatedIn :Paris .
+
+:TourPerret a :Object ;
+    foaf:name "Tour Perret" ;
+    :locatedIn :Grenoble .
+
+# Événements
+:FetesLumieres a :Event ;
+    foaf:name "Fêtes des Lumières" ;
+    :locatedIn :Lyon ;
+    :date "2023-12-08"^^xsd:date ;
+    :hasEventType :Culture .
+
+:JOParis2024 a :Event ;
+    foaf:name "Jeux Olympiques de Paris 2024" ;
+    :locatedIn :Paris ;
+    :date "2024-07-26"^^xsd:date ;
+    :hasEventType :Sport .
+
+:FoireGrenoble a :Event ;
+    foaf:name "Foire de Grenoble" ;
+    :locatedIn :Grenoble ;
+    :date "2023-11-10"^^xsd:date ;
+    :hasEventType :Culture .
+
+:FestivalCannes a :Event ;
+    foaf:name "Festival de Cannes" ;
+    :locatedIn :Cannes ;
+    :date "2023-05-16"^^xsd:date ;
+    :hasEventType :Culture .
+
+:PendaisonCremaille a :EventType ;
+    foaf:name "Pendaison de crémaillère" .
+
+# Personnes
+:PhilippeGenoud a :Person ;
+    foaf:name "Philippe Genoud" .
+
+:ManuelAtencia a :Person ;
+    foaf:name "Manuel Atencia" .
+
+:DanielleZieblin a :Person ;
+    foaf:name "Danielle Ziéblin" .
+
+# Relations d'amitié
+:PhilippeGenoud :isFriendOf :ManuelAtencia .
+:ManuelAtencia :isFriendOf :PhilippeGenoud .
+
+# Photos
+:Photo1 a :Photo ;
+    :hasTitle "Tour Eiffel au crépuscule" ;
+    :hasDate "2023-06-20"^^xsd:date ;
+    :hasPlace :Paris ;
+    :hasPerson :ManuelAtencia ;
+    :hasObject :TourEiffel .
+
+:Photo2 a :Photo ;
+    :hasTitle "Les Fêtes des Lumières 2023" ;
+    :hasDate "2023-12-08"^^xsd:date ;
+    :hasPlace :Lyon ;
+    :hasEvent :FetesLumieres ;
+    :hasPerson :PhilippeGenoud .
+
+:Photo3 a :Photo ;
+    :hasTitle "JO Paris 2024 - Cérémonie d'ouverture" ;
+    :hasDate "2024-07-26"^^xsd:date ;
+    :hasPlace :Paris ;
+    :hasEvent :JOParis2024 ;
+    :hasPerson :DanielleZieblin, :ManuelAtencia .
+
+:Photo4 a :Photo ;
+    :hasTitle "Vue de la Tour Perret à Grenoble" ;
+    :hasDate "2023-09-10"^^xsd:date ;
+    :hasPlace :Grenoble ;
+    :hasObject :TourPerret ;
+    :hasPerson :DanielleZieblin .
+
+:Photo5 a :Photo ;
+    :hasTitle "La Foire de Grenoble - Décoration de Noël" ;
+    :hasDate "2023-11-10"^^xsd:date ;
+    :hasPlace :Grenoble ;
+    :hasEvent :FoireGrenoble ;
+    :hasPerson :PhilippeGenoud, :ManuelAtencia .
+
+:Photo6 a :Photo ;
+    :hasTitle "Balade à Lyon" ;
+    :hasDate "2023-10-15"^^xsd:date ;
+    :hasPlace :Lyon ;
+    :hasPerson :DanielleZieblin .
+
+:Photo7 a :Photo ;
+    :hasTitle "Festival de Cannes - Tapis rouge" ;
+    :hasDate "2023-05-16"^^xsd:date ;
+    :hasPlace :Cannes ;
+    :hasEvent :FestivalCannes ;
+    :hasPerson :PhilippeGenoud .
+
+:Photo8 a :Photo ;
+    :hasTitle "Selfie devant la Tour Eiffel" ;
+    :hasDate "2023-07-05"^^xsd:date ;
+    :hasPlace :Paris ;
+    :hasObject :TourEiffel ;
+    :hasPerson :ManuelAtencia, :PhilippeGenoud .
+
+:Photo9 a :Photo ;
+    :hasTitle "Nuit étoilée à Grenoble" ;
+    :hasDate "2023-08-30"^^xsd:date ;
+    :hasPlace :Grenoble ;
+    :hasPerson :DanielleZieblin, :PhilippeGenoud .
+
+:Photo10 a :Photo ;
+    :hasTitle "Promenade nocturne à Lyon" ;
+    :hasDate "2023-12-09"^^xsd:date ;
+    :hasPlace :Lyon ;
+    :hasEvent :FetesLumieres ;
+    :hasPerson :ManuelAtencia, :DanielleZieblin .
+
+:Photo11 a :Photo ;
+    :hasTitle "Photo de l'événement sans personnes" ;
+    :hasEvent :PendaisonCremaille ;
+    :hasDate "2023-12-15"^^xsd:date .
+
+# Liens entre lieux et régions
+:Grenoble :locatedInRegion :Isere .
+:Paris :locatedInRegion :France .
+:Lyon :locatedInRegion :France .
+:Cannes :locatedInRegion :France .
+
+# Ajout de l'événement Pendaison de crémaillère
+:PendaisonCremaille a :Event ;
+    foaf:name "Pendaison de crémaillère" ;
+    :date "2023-07-01"^^xsd:date ;
+    :hasEventType :PendaisonCremaille ;
+    :hasPlace :Paris ;
+    :hasPerson :ManuelAtencia, :PhilippeGenoud .
